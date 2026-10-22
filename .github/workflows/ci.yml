@@ -40,10 +40,10 @@ jobs:
       - name: Ejecutar tests
         run: npm test
 
-  # Check agregador con nombre estable "CI": es el que se marca como obligatorio
+  # Check agregador con nombre estable "ci": es el que se marca como obligatorio
   # en la protección de rama, sin depender de la matriz de versiones de Node.
   ci:
-    name: CI
+    name: ci
     runs-on: ubuntu-latest
     needs: test
     if: ${{ always() }}
