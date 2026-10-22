@@ -2,6 +2,7 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const { applySecurityHeaders } = require('./security-headers');
+const { resolveStaticPath } = require('./static-path');
 
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
 const PORT = process.env.PORT || 3000;
@@ -12,6 +13,8 @@ const MIME_TYPES = {
   '.js': 'text/javascript; charset=utf-8',
 };
 
+const STATUS_MESSAGES = { 400: 'Bad request', 403: 'Forbidden', 404: 'Not found' };
+
 function createServer() {
   return http.createServer((req, res) => {
     applySecurityHeaders(res);
@@ -21,22 +24,18 @@ function createServer() {
       return res.end(JSON.stringify({ status: 'ok' }));
     }
 
-    const pathname = new URL(req.url, 'http://localhost').pathname;
-    const requested = pathname === '/' ? '/index.html' : pathname;
-    const filePath = path.join(PUBLIC_DIR, path.normalize(requested));
-
-    if (!filePath.startsWith(PUBLIC_DIR + path.sep)) {
-      res.writeHead(403);
-      return res.end('Forbidden');
+    const { filePath, status } = resolveStaticPath(PUBLIC_DIR, req.url);
+    if (status) {
+      res.writeHead(status);
+      return res.end(STATUS_MESSAGES[status]);
     }
 
     fs.readFile(filePath, (err, data) => {
       if (err) {
         res.writeHead(404);
-        return res.end('Not found');
+        return res.end(STATUS_MESSAGES[404]);
       }
-      const type = MIME_TYPES[path.extname(filePath)] || 'application/octet-stream';
-      res.writeHead(200, { 'Content-Type': type });
+      res.writeHead(200, { 'Content-Type': MIME_TYPES[path.extname(filePath)] });
       res.end(data);
     });
   });
