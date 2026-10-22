@@ -1,6 +1,7 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
+const { applySecurityHeaders } = require('./security-headers');
 
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
 const PORT = process.env.PORT || 3000;
@@ -13,6 +14,8 @@ const MIME_TYPES = {
 
 function createServer() {
   return http.createServer((req, res) => {
+    applySecurityHeaders(res);
+
     if (req.url === '/health') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ status: 'ok' }));
