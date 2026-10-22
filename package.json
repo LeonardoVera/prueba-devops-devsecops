@@ -1,0 +1,24 @@
+{
+  "name": "prueba-devops-devsecops",
+  "version": "1.0.0",
+  "description": "Proyecto base para pruebas de DevOps/DevSecOps",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test \"test/*.test.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeonardoVera/prueba-devops-devsecops.git"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "bugs": {
+    "url": "https://github.com/LeonardoVera/prueba-devops-devsecops/issues"
+  },
+  "homepage": "https://github.com/LeonardoVera/prueba-devops-devsecops#readme"
+}
